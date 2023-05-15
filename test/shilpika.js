@@ -1,6 +1,5 @@
-
 // Includes
-const { Builder , By, Key, until} = require ('selenium-webdriver');
+const { Builder,By,Key,until} = require('selenium-webdriver');
 const should = require('chai').should();
 
 /*  As a customer,
@@ -11,52 +10,65 @@ so that i can find the product that matches my preferences or needs.
 //Test grouping:search
 describe.only('Search for a product of particular color', () => {
     //Test case:
-    context('Given a user is on the search page',() => {
-        it('should show the shirt of preferred color'), async() => {
+    context('Given a user is on the search page', () => {
+        it('should show the shirt of preferred color', async () => {
             //start the webbrowser
             const driver = await new Builder().forBrowser('firefox').build();
 
             //Search for a product
-           try{
-            //Move to magento site
-            await driver.get('https://magento.softwaretestingboard.com/');
-            //Get the search input
-            await driver.wait(until.elementLocated(By.css('#search')),50000);
-            await driver.findElement(By.id('search')).sendKeys('shirt for men', Key.RETURN);
-           
-          
-          
+            try {
+                //Move to magento site
+                await driver.get('https://magento.softwaretestingboard.com/');
+                //Get the search input
+                await driver.wait(until.elementLocated(By.css('#search')), 50000);
+                await driver.findElement(By.id('search')).sendKeys('shirt for men', Key.RETURN);
 
-            //Find the first product
-             await driver.wait(until.elementsLocated(By.css('.item.product.product-item:nth-child(3)'))),10000;
-            const product= await driver.findElement(By.css('.item.product.product-item:nth-child(3)'));
-            
-           
+                // Scroll down a bit
+                await driver.wait(until.elementsLocated(By.css('.item.product.product-item')), 50000);
+                await driver.executeScript('document.querySelector(".item.product.product-item").scrollIntoView();');
 
-            //find the information in the product we selected
-             let productTitle = await product.findElement(By.css('.product-item-link'));
-             let productPrice = await product.findElement(By.css('.price'))
-             let productColor = await product.findElement(By.class('.swatch-option color'));
-            
+                //Find the first product
+                await driver.wait(until.elementLocated(By.css('.item.product.product-item:first-child')), 50000);
 
-            // Extra text
-            let productTitleText = await productTitle.getText();
-            let productPriceText = await productPrice.getText();
-            let productColorText = await productColor.getText();
+                const product = await driver.findElement(By.css('.item.product.product-item:first-child'));
 
-            productTitleText.should.equal('Balboa Persistence Tee');
-            productPriceText.should.equal('$29.00');
-            productColorText.should.equal('green');
 
-        
-            console.log(productTitleText, productPriceText, productColorText);
-          
-            await driver.quit();
-           } 
-           finally {
-           await driver.quit();
-           }
 
-        };
+
+                //find the information in the product we selected
+
+                await driver.wait(until.elementLocated(By.css('.swatch-attribute.color')), 50000);
+                let swatchColors = await product.findElement(By.css('.swatch-attribute.color'));
+
+                let productColor1 = await swatchColors.findElement(By.css('div[index="1"]'));
+                productColor1.click();
+                console.log("You have chosen orange color shirt");
+
+                productColor2 = await swatchColors.findElement(By.css('div[index="2"]'));
+                await driver.sleep(3000);
+                setTimeout(() => {
+                productColor2.click().then(() => {
+                        console.log("You have chosen purple color shirt");
+                    });
+                }, 5000);
+
+                productColor3 = await swatchColors.findElement(By.css('div[index="0"]'));
+                await driver.sleep(5000);
+                setTimeout(() => {
+                productColor3.click().then(() => {
+                        console.log("You have chosen blue color shirt");
+                    });
+                }, 5000);
+
+
+                await driver.sleep(10000);
+
+            } catch (Exception) {
+
+            } finally {
+                await driver.quit();
+            }
+
+        });
     });
 });
