@@ -1,5 +1,5 @@
 // Includes
-const { Builder,By,Key,until} = require('selenium-webdriver');
+const {Builder,By,Key,until} = require('selenium-webdriver');
 const should = require('chai').should();
 
 /*  As a customer,
@@ -21,7 +21,7 @@ describe.only('Search for a product of particular color', () => {
                 await driver.get('https://magento.softwaretestingboard.com/');
                 //Get the search input
                 await driver.wait(until.elementLocated(By.css('#search')), 50000);
-                await driver.findElement(By.id('search')).sendKeys('shirt for men', Key.RETURN);
+                await driver.findElement(By.id('search')).sendKeys('shirts for men', Key.RETURN);
 
                 // Scroll down a bit
                 await driver.wait(until.elementsLocated(By.css('.item.product.product-item')), 50000);
@@ -42,26 +42,43 @@ describe.only('Search for a product of particular color', () => {
 
                 let productColor1 = await swatchColors.findElement(By.css('div[index="1"]'));
                 productColor1.click();
-                console.log("You have chosen orange color shirt");
+                console.log("choose orange color shirt");
+
+
 
                 productColor2 = await swatchColors.findElement(By.css('div[index="2"]'));
-                await driver.sleep(3000);
+                await driver.sleep(5000);
                 setTimeout(() => {
-                productColor2.click().then(() => {
-                        console.log("You have chosen purple color shirt");
+                    productColor2.click().then(() => {
+                        console.log("choose purple color shirt");
                     });
                 }, 5000);
+
+
 
                 productColor3 = await swatchColors.findElement(By.css('div[index="0"]'));
                 await driver.sleep(5000);
                 setTimeout(() => {
-                productColor3.click().then(() => {
-                        console.log("You have chosen blue color shirt");
+                    productColor3.click().then(() => {
+                        console.log("choose blue color shirt");
                     });
                 }, 5000);
+         
+           await driver.sleep(10000);
 
+         //Asserts
+          assert.equal(productColor1 , 'Orange'); //Built in Node
+          expect(productColor1).to.equal('Orange'); //Chai expect
+          productColor1.should.equal('Orange'); //Chai should 
+          
+          assert.equal(productColor2 , 'Purple'); //Built in Node
+          expect(productColor2).to.equal('Purple'); //Chai expect
+          productColor2.should.equal('Purple'); //Chai should 
 
-                await driver.sleep(10000);
+          assert.equal(productColor3 , 'Blue'); //Built in Node
+          expect(productColor3).to.equal('Blue'); //Chai expect
+          productColor3.should.equal('Blue'); //Chai should
+
 
             } catch (Exception) {
 
